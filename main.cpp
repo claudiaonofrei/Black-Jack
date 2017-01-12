@@ -4,8 +4,8 @@
 #include <ctime>
 
 using namespace std;
-int vec[15],manaJucatorului[10],manaDealerului[10],modul=0,punctajManaJucator=0,punctajManaDealer=0,numarCartiJucator=0,numarCartiDealer=0,alege=0;
-bool pachetCarti[52];
+int vec[15],manaJucatorului[10],manaDealerului[10],modul=0,punctajManaJucator=0,punctajManaDealer=0,numarCartiJucator=0,numarCartiDealer=0,alege=0,punctajJucator1=0,punctajJucator2=0;
+int pachetCarti[14],manaJucator1[10],manaJucator2[10];
 char alegere,nume[15],nume1[15];
 int modulJocului()
 {
@@ -15,6 +15,7 @@ int modulJocului()
         cout<<"Alegeti modul in care doriti sa jucati! \n";
         cout<<"1.Jucator vs. Calculator \n";
         cout<<"2.Jucator 1 vs. Jucator 2 \n";
+        cout<<"3.EXIT \n";
         cin>>modul;
         if(modul==1)
         {
@@ -30,6 +31,8 @@ int modulJocului()
             cout<<"Nume Jucator 2:";
             cin>>nume1;
         }
+        if(modul==3)
+            exit (0);
     }
         else
             cout<<"Ati tastat o valoare gresita! Va rog sa alegeti din nou! \n";
@@ -38,7 +41,6 @@ int modulJocului()
 }
 void cineCastiga(int punctajManaJucator, int punctajManaDealer)
 {
-    system("cls");
     if(punctajManaJucator>21)
     {
         cout<<"|*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|"<<endl;
@@ -65,29 +67,35 @@ void cineCastiga(int punctajManaJucator, int punctajManaDealer)
 
 int valoareaCartilor(int carte)
 {
-    srand(time(0));
-    int i=0;
-    carte=rand()%13+1;
-   for(i=0;i<=14;i++)
-   if(vec[carte]<4)
+   int valoare=0;
+   switch(carte)
    {
-       vec[carte]++;
-       cout<<carte;
+   case 1:
+    {valoare=11;}break;
+   case 11:
+   case 12:
+   case 13:
+    {valoare=10;}break;
+   default:
+    {valoare=carte;};
    }
-   else
-    carte=rand()%13+1;
-
+    return valoare;
 }
-scorMana(int mana[],int nrcarti)
-{
-
+int scorMana(int mana[],int nrcarti,int card)
+{   int scor=0;
+    for(int i=0;i<nrcarti;i++)
+    {
+        if(mana[i]=='J'||mana[i]=='Q'||mana[i]=='K')
+            scor=scor+10;
+        else if(mana[i]=='A')
+            scor=scor+11;
+    }
+    return scor;
 }
 
 void afiseazaCartea(int carti)
 {
-    int cregale;
-    cregale=carti%13+1;
-    switch(cregale)
+    switch(carti)
     {
     case 1:
         {cout<<'A';}break;
@@ -97,6 +105,8 @@ void afiseazaCartea(int carti)
         {cout<<'Q';}break;
     case 13:
         {cout<<'K';}break;
+    default:
+        {cout<<carti;}
     }
 }
 void arataMana(int mana[],int nrcarti)
@@ -110,14 +120,17 @@ void arataMana(int mana[],int nrcarti)
     }
     cout<<endl;
 }
-int carteaUrmatoare(bool pachetCarti[])
+int carteaUrmatoare(int pachetCarti[])
 {
     int cartenoua=0,ok=1;
     while(ok==1)
     {
-        cartenoua=rand()%52+1;
-        if(pachetCarti[cartenoua]==false)
+        cartenoua=rand()%13+1;
+        if(pachetCarti[cartenoua]<4)
+        {
+            pachetCarti[cartenoua]++;
             ok=0;
+        }
     }
     return cartenoua;
 }
@@ -136,40 +149,60 @@ void afisareMeniu()
 
 int main()
 {
-    srand(time(0));
+    int tm = time (0);
     system("cls");
+    cout << tm << '\n';
+    srand(tm);
     afisareMeniu();
     alege=modulJocului();
     if(alege==1)
     {
-
-        for(int i=0;i<2;i++)
-            {
-                manaJucatorului[i]=carteaUrmatoare(pachetCarti);
-                punctajManaJucator=punctajManaJucator+manaJucatorului[i];
-                manaDealerului[i]=carteaUrmatoare(pachetCarti);
-                punctajManaDealer=punctajManaDealer+manaDealerului[i];
-            }
         numarCartiJucator=2;
         numarCartiDealer=2;
+        for(int i=0;i<numarCartiJucator;i++)
+        {
+            manaJucatorului[i]=carteaUrmatoare(pachetCarti);
+            manaDealerului[i]=carteaUrmatoare(pachetCarti);
+            punctajManaJucator+=valoareaCartilor(manaJucatorului[i]);
+            punctajManaDealer+=valoareaCartilor(manaDealerului[i]);
+        }
+
         cout<<"Cartile Dealerului sunt:"<<"[]"<<" ";
         cout<<manaDealerului[1]<<endl;
         cout<<endl;
         cout<<"Cartile jucatorului sunt:";
-        arataMana(manaJucatorului,numarCartiJucator);
+       arataMana(manaJucatorului,numarCartiJucator);
         cout<<"Punctajul tau este:"<<" ";
         cout<<punctajManaJucator<<endl;
         cout<<endl;
-        cout<<"Daca mai doriti inca o carte, apasati tasta 'H'. In caz contrar, apasati tasta 'S'";
+        cout<<"Daca mai doriti inca o carte, apasati tasta 'H'. In caz contrar, apasati tasta 'S'"<<endl;
         cin>>alegere;
         if(alegere=='H'||alegere=='h')
         {
             manaJucatorului[numarCartiJucator]=carteaUrmatoare(pachetCarti);
             numarCartiJucator++;
         }
-        else
-            if(alegere=='S'||alegere=='s')
+        else if(alegere=='S'||alegere=='s')
             cineCastiga(punctajManaJucator,punctajManaDealer);
         else cout<<"Ati ales o valoare eronata!!Mai incercati o data!"<<endl;
+    }
+    if(alege==2)
+    {
+        for(int i=0;i<2;i++)
+        {
+            manaJucator1[i]=carteaUrmatoare(pachetCarti);
+            punctajJucator1=punctajJucator1+valoareaCartilor(manaJucator1[i]);
+            manaJucator2[i]=carteaUrmatoare(pachetCarti);
+            punctajJucator2=punctajJucator2+valoareaCartilor(manaJucator2[i]);
+        }
+            cout<<"Carti " << nume << ":";
+            arataMana(manaJucator1,2);
+            cout<<"Carti " << nume1 << ":";
+            arataMana(manaJucator2,2);
+            cout<<"Punctaj " << nume<<":";
+            cout<<punctajJucator1<<endl;
+            cout<<"Punctaj " << nume1<<":";
+            cout<<punctajJucator2<<endl;
+
     }
 }
