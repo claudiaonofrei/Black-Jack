@@ -65,6 +65,9 @@ void cineCastiga(int punctajManaJucator, int punctajManaDealer)
             cout<<"|*|*|*|*|*|*|*|*|*|*|*|*|"<<endl;
             cout<<"Felicitari!! Ai castigat!"<<endl;
         }
+    else
+        if(punctajManaDealer>21)
+        cout<<"Computerul a pierdut"<<nume<<" a castigat";
     else cout<<"Computerul a castigat!! Imi pare rau. Mai incearca o data!";
 }
 
@@ -142,6 +145,25 @@ void afisareMeniu()
 
 int main()
 {
+    Meniu:
+        modul=0,punctajManaJucator=0,punctajManaDealer=0,numarCartiJucator=0,numarCartiDealer=0,alege=0,punctajJucator1=0,punctajJucator2=0;
+        nrCartiJucator1=0,nrCartiJucator2=0,tasta=0;
+        for (int i=0;i<15;i++)
+        {
+            if(i<10)
+                {
+                manaJucatorului[i]=manaDealerului[i]=manaJucator2[i]=manaJucator1[i]=0;
+                }
+            else if(i<14)
+            {
+                pachetCarti[i] = 0;
+            }
+            else
+                {
+                vec[i] = nume[i] = nume1[i] = 0;
+                }
+        }
+
     int tm = time (0);
     system("cls");
     cout << tm << '\n';
@@ -163,7 +185,7 @@ int main()
         cout<<"Cartile Dealerului sunt:"<<"*"<<" ";
         cout<<manaDealerului[1]<<endl;
         cout<<endl;
-        cout<<nume<<", cartile tale sunt: ";`
+        cout<<nume<<", cartile tale sunt: ";
        arataMana(manaJucatorului,numarCartiJucator);
         cout<<endl;
         cout<<"Punctajul tau este:"<<" ";
@@ -198,16 +220,19 @@ int main()
 
         if(alegere=='S'||alegere=='s')
                {
+
                     arataMana(manaDealerului,numarCartiDealer);
                     cout<<endl;
                     cout<<"punctajul Dealerului este:"<<punctajManaDealer<<endl;
                     cout<<"Punctajul jucatorului:"<<punctajManaJucator<<endl;
                     cineCastiga(punctajManaJucator,punctajManaDealer);
                     cout<<endl;
+                    char x;
+                    cout<<"apasati litera X pentru a continua";
+                    cin>>x;
+                    goto Meniu;
                }
             else cout<<"Ati ales o valoare eronata!!Mai incercati o data!"<<endl;
-            alege=modulJocului();
-            cin>>alege;
 
 
     }
